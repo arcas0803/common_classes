@@ -105,6 +105,48 @@ sealed class Result<T> {
       return onError(this as Error<T>);
     }
   }
+
+  /// Get the value of [Success] or null if [Error].
+  ///
+  T? getOrNull() {
+    if (this is Success<T>) {
+      return (this as Success<T>).value;
+    } else {
+      return null;
+    }
+  }
+
+  /// Get the value of [Success] or throw [Exception] if [Error].
+  ///
+  T getOrThrow() {
+    if (this is Success<T>) {
+      return (this as Success<T>).value;
+    } else {
+      throw (this as Error<T>).exception;
+    }
+  }
+
+  /// Get the error of [Error] or null if [Success].
+  ///
+  Failure? getErrorOrNull() {
+    if (this is Error<T>) {
+      return (this as Error<T>).exception;
+    } else {
+      return null;
+    }
+  }
+
+  /// Get the error of [Error] or throw [Exception] if [Success].
+  ///
+  /// If [Error] is null, throw [Exception] with message.
+  ///
+  Failure getErrorOrThrow({String message = 'Result is not Error'}) {
+    if (this is Error<T>) {
+      return (this as Error<T>).exception;
+    } else {
+      throw Exception(message);
+    }
+  }
 }
 
 /// Represents a successful value of type [T].
